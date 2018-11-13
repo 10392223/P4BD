@@ -81,16 +81,24 @@ def divideLists(a, b):
 #        return "Divide by Zero not allowed"
     return [x/y for (x, y) in zip(a, b)]
 
-def exponent(a, b): 
+def exponentLists(a, b): 
+    
+    if type(a) != list or type(b) != list:
+        return "Please enter two lists of numbers"
+    
+    elif len(a) != len(b):
+        "Please enter two lists of numbers of equal length"
+        
+    return [x ** y for (x, y) in zip(a, b)]
     #fn to raise one number to power of another
     #this fn only works well for a>=0 as a ** b will not accurately roots that return real answers, i.e. cubed root
-    if isinstance(a,str) == True or isinstance(b, str) == True:
-        return "Strings not allowed, please try again"
-    elif a==0 and b==0:
-        return "undefined term"
-    elif a < 0:
-        return "this calculator cannot give an accurate answer in case a<0"
-    return a ** b
+#    if isinstance(a,str) == True or isinstance(b, str) == True:
+#        return "Strings not allowed, please try again"
+#    elif a==0 and b==0:
+#        return "undefined term"
+#    elif a < 0:
+#        return "this calculator cannot give an accurate answer in case a<0"
+#    return a ** b
     
 def factorialList(*a):
     #fn to take the factorials of a list of non-neg integers
@@ -112,13 +120,14 @@ def reciprocalList(*args):
 #    if a == 0:
 #        return "Division by zero not allowed."
     return list(map((lambda x: 1/x), recip))
-def sine(a):
-    #fn to caclulate sine of an angle
-    if isinstance(a,str) == True:
-        return "Strings not allowed, please try again"
-    rad = math.radians(a)  #see cosine fn above for explanation
-    return math.sin(rad)
-
+def sineList(*a):
+       
+    angles = [math.radians(elm) for elm in a]
+    #function to calc cos of a list of angles
+#    if isinstance(a,str) == True:
+#        return "Strings not allowed, please try again"
+     #convert from deg to rads, assuming user will enter degrees, also hard for user to enter certain well used angles in radians exactly (90 = pi/2, etc)
+    return list(map(lambda x: math.sin(x), angles))#returns cos of converted angle
 def squareList(*a):
     squares = list(a)
     #fn to square a number
@@ -153,13 +162,12 @@ def subtractLists(a, b):
     #use list comprehehsion and zip function to create 3rd list that is the pairwise subtraction
     return [x - y for (x, y) in zip(a, b)]
 
-def tangent(a): 
-    #fn to calculate tan of an angle
+def tangentList(*a): 
+    #fn to calculate tan of list of angles
     #this function will only produce an approx of tan, it can't deal with the zeros
-    if isinstance(a,str) == True:
-        return "Strings not allowed, please try again"
-    rad = math.radians(a)
-    return (math.sin(rad) / math.cos(rad)) 
+    angles = [math.radians(elm) for elm in a]
+    return list(map(lambda x: math.tan(x), angles))
+
 
 
 

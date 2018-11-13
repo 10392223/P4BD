@@ -7,7 +7,8 @@ Created on Sat Nov 10 20:52:42 2018
 """
 
 import unittest
-from calcmapreduce import addList, cosList, cubeList, cuberootList, divideLists, factorialList, multiplyList, reciprocalList, squareList, squareGenerator, squarerootList, subtractLists
+from calcmapreduce import addList, cosList, cubeList, cuberootList, divideLists, factorialList, multiplyList, reciprocalList, sineList, squareList, squareGenerator, squarerootList, subtractLists, tangentList
+import numpy as np
 
 class CalcmapreduceTest(unittest.TestCase): #inherits from unittest
     
@@ -22,7 +23,7 @@ class CalcmapreduceTest(unittest.TestCase): #inherits from unittest
     def testCosList(self):
         #the assertAlmostEqual function doesn't work here as it cannot subtract lists pairwise.
         #imported numpy and used it's testing function. This returns error in unittest if the numpy test breaks
-        import numpy as np
+        
         np.testing.assert_almost_equal([0,1,-1], cosList(90,0,180))
         
     
@@ -49,6 +50,12 @@ class CalcmapreduceTest(unittest.TestCase): #inherits from unittest
         self.assertEqual([1,4, 9], squareList(1,2,3))
         self.assertEqual([1,4, 9], squareList(-1,-2,-3))
         
+    def testSineList(self):
+        #the assertAlmostEqual function doesn't work here as it cannot subtract lists pairwise.
+        #imported numpy and used it's testing function. This returns error in unittest if the numpy test breaks
+        
+        np.testing.assert_almost_equal([1,0,0], sineList(90,0,180))
+        
     def testSquareGenerator(self):
         #set up the generator with some inputs
         square = squareGenerator(1,2,3)
@@ -62,6 +69,15 @@ class CalcmapreduceTest(unittest.TestCase): #inherits from unittest
         self.assertEqual([1,2, 3], squarerootList(-1,1,4,9)) 
     def testSubtractLists(self):
         self.assertEqual([1,1], subtractLists([2,2], [1,1]))
+    def testTanList(self):
+        #the assertAlmostEqual function doesn't work here as it cannot subtract lists pairwise.
+        #imported numpy and used it's testing function. This returns error in unittest if the numpy test breaks
+        
+        np.testing.assert_almost_equal([0,0], tangentList(0,180))
+#        np.testing.assert_almost_equal([0, tangent(0))
+#        self.assertAlmostEqual(0, tangent(180))
+#        self.assertAlmostEqual(0, tangent(-180))
+#        self.assertEqual("Strings not allowed, please try again", tangent("90"))
         
 if __name__ == '__main__':        
     unittest.main()
