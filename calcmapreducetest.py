@@ -7,7 +7,7 @@ Created on Sat Nov 10 20:52:42 2018
 """
 
 import unittest
-from calcmapreduce import addList, cosList, cubeList, divideLists, multiplyList, reciprocalList, squareList, squareGenerator, squarerootList, subtractLists
+from calcmapreduce import addList, cosList, cubeList, cuberootList, divideLists, factorialList, multiplyList, reciprocalList, squareList, squareGenerator, squarerootList, subtractLists
 
 class CalcmapreduceTest(unittest.TestCase): #inherits from unittest
     
@@ -16,16 +16,29 @@ class CalcmapreduceTest(unittest.TestCase): #inherits from unittest
         self.assertEqual(10, addList(1,2,3,4)) #test + numbers
         self.assertEqual(-10, addList(-1,-2,-3, -4)) #test - numbers
         self.assertEqual(2, addList(1,-2,3)) #test mix
-        self.assertEqual(1, addList(1)) #test one number
+        self.assertEqual(1, addList(1))
+        self.assertEqual((4, 'We removed your strings'), addList(1, 'a',3))#test list with string
+        self.assertEqual("No numbers in string, please try again", addList('b', 'a'))#test list with all strings
+    def testCosList(self):
+        #the assertAlmostEqual function doesn't work here as it cannot subtract lists pairwise.
+        #imported numpy and used it's testing function. This returns error in unittest if the numpy test breaks
+        import numpy as np
+        np.testing.assert_almost_equal([0,1,-1], cosList(90,0,180))
         
-#    def testCosList(self):
-#        self.assertAlmostEqual([0,1,-1], cubeList(90,0,180))
-        
-    def testDivideLists(self):
-        self.assertEqual([2,2], divideLists([4,2], [2,1]))
+    
     def testCubeList(self):
         self.assertEqual([1,8,27], cubeList(1,2,3))
         self.assertEqual([-1,-8,-27], cubeList(-1,-2,-3))
+    def testCuberootList(self):
+        self.assertEqual(([1.0, 2.0], [-1.0]), cuberootList(-1,1,8))
+        
+    def testDivideLists(self):
+        self.assertEqual([2,2], divideLists([4,2], [2,1]))
+        self.assertEqual("Inputs not of same length, please try again", divideLists([1], [1,2]))
+        
+    def testFactorialList(self):
+        self.assertEqual([1,2,6], factorialList(1,2,3))
+        
     def testMultiplyList(self):
         self.assertEqual(6, multiplyList(1,2,3))
         self.assertEqual(-6, multiplyList(-1,-2,-3))
@@ -35,9 +48,15 @@ class CalcmapreduceTest(unittest.TestCase): #inherits from unittest
     def testSquareList(self):
         self.assertEqual([1,4, 9], squareList(1,2,3))
         self.assertEqual([1,4, 9], squareList(-1,-2,-3))
-#    def testSquareGenerator(self):
-#        self.squareGenerator([1,2,3])
-#        self.assertEqual(1, next(sq))
+        
+    def testSquareGenerator(self):
+        #set up the generator with some inputs
+        square = squareGenerator(1,2,3)
+        #test that each iteration works
+        self.assertEqual(1, next(square))
+        self.assertEqual(4, next(square))
+        self.assertEqual(9, next(square))
+        
     def testSquarerootList(self):
         self.assertEqual([1,2, 3], squarerootList(1,4,9))
         self.assertEqual([1,2, 3], squarerootList(-1,1,4,9)) 

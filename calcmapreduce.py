@@ -5,52 +5,76 @@
 
 #The deadline is the 18th November 2018 on moodle @ 23:55.
 
+"I have used map, filter, reduce, generators and list comprehension in at least one function each here."
+
+
 import math #importing this to aid with couple of calc fns
 from functools import reduce
 
 def addList(*a):
     #function to add a list of numbers together
+    #convert args to list
     add = list(a)
-    for item in add:
-        if isinstance(item,str) == True: #accounts for strings, repeat throughout
-            return "Strings not allowed, please try again"
+    #list comprehension to remove all strings
+    numbers = [elm for elm in add if isinstance(elm, str) == False]
+#    for item in add:
+#        if isinstance(item,str) == True: #accounts for strings, repeat throughout
+#            return "Strings not allowed, please try again"
+    if len(numbers) == 0:
+        return "No numbers in string, please try again"
     
-    return reduce((lambda x, y: x+y), add)
+    if len(numbers) < len(add):
+        return reduce((lambda x, y: x+y), numbers), "We removed your strings"
     
- 
-    
+    return reduce((lambda x, y: x+y), numbers)
+     
     
     
 
 
 def cosList(*a):
-    angles = list(a)
+    
+    angles = [math.radians(elm) for elm in a]
     #function to calc cos of a list of angles
 #    if isinstance(a,str) == True:
 #        return "Strings not allowed, please try again"
-    rad = math.radians(angles) #convert from deg to rads, assuming user will enter degrees, also hard for user to enter certain well used angles in radians exactly (90 = pi/2, etc)
-    return list(map(lambda x: math.cos(x), rad))#returns cos of converted angle
+     #convert from deg to rads, assuming user will enter degrees, also hard for user to enter certain well used angles in radians exactly (90 = pi/2, etc)
+    return list(map(lambda x: math.cos(x), angles))#returns cos of converted angle
 
-def cubeList(*args):
-    cubeList = list(args)
-    #fn to cube one number
+def cubeList(*a):
+    #fn to cube list of numbers
+    #make a list out of your args
+    cubeList = list(a)
+    #list comprehension to remove strings
+    numbers = [elm for elm in cubeList if isinstance(elm, str) == False]
+    
+    if len(numbers) == 0:
+        return "No numbers in string, please try again"
+    #return message to let them know data was cleansed
+    elif len(numbers) < len(cubeList):
+        return [x**3 for x in numbers], "We removed your strings"
+    
+    #returns if no strings in list
+    return [x**3 for x in numbers]
+
+def cuberootList(*a):
+    #fn to get cuberoots of a list of numbers
 #    if isinstance(a,str) == True:
 #        return "Strings not allowed, please try again"
-    #using list comprehension for this example
-    return [x**3 for x in cubeList]
-
-def cuberoot(a):
-    #fn to get cuberoot of a number
-    if isinstance(a,str) == True:
-        return "Strings not allowed, please try again"
-    elif a >= 0: #for a>0 simple case
-        return a ** (1/3)
-    elif a< 0:
-        return -(-a) ** (1/3) #reason we need to do this is that the approximation of 1/3 power will eval to a complex number
+    c_roots = list(a)
+    #split into two lists using filter.
+    #we need to do this as fn for calculating cube roots is different for x>=0 and x<0 or we end up with incorrect complex values for some real valued roots
+    non_neg = list(filter(lambda x: x >= 0, c_roots))
+    neg = list(filter(lambda x: x<0, c_roots))
+    #return two lists, one with cuberoots of non neg numbers, and one for neg numbers
+    return list(map(lambda x: x**(1/3), non_neg)), list(map(lambda x: -(-x)**(1/3), neg)) #for a>0 simple case
+   
     
 def divideLists(a, b):
     #doesn't make sense to sense to set up a rolling division here.
     #define function to be pairwise division of two lists of equal length
+    if len(a) != len(b):
+        return "Inputs not of same length, please try again"
 #    if isinstance(a,str) == True or isinstance(b, str) == True:
 #        return "Strings not allowed, please try again"
 #    elif b == 0: #accounting for divide by zero
@@ -68,18 +92,11 @@ def exponent(a, b):
         return "this calculator cannot give an accurate answer in case a<0"
     return a ** b
     
-#def factorialList(*args):
-#    #fn to take the factorials of a list of non-neg integers
-#    fact = list(args)
-#    if isinstance(a, int) == False:
-#        return "Factorial only works on non-negative integers."
-#    elif a < 0:
-#        return "Factorial only works on non-negative integers."
-#    fact = 1 #for loop to calculate factorial
-#    for i in range(1, (a+1)):
-#        fact = i * fact 
-#    return fact
- 
+def factorialList(*a):
+    #fn to take the factorials of a list of non-neg integers
+    
+    return list(map((lambda n: math.factorial(n)), a))
+     
 def multiplyList(*args):
     mult = list(args)
     #fn to multiply two numbers
@@ -102,14 +119,15 @@ def sine(a):
     rad = math.radians(a)  #see cosine fn above for explanation
     return math.sin(rad)
 
-def squareList(*args):
-    squares = list(args)
+def squareList(*a):
+    squares = list(a)
     #fn to square a number
 #    if isinstance(a,str) == True:
 #        return "Strings not allowed, please try again"
     return list(map((lambda x: x**2), squares))
 
-def squareGenerator(squares):
+def squareGenerator(*a):
+    squares = list(a)
     for value in squares:
         yield value**2
         
