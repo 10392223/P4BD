@@ -9,76 +9,96 @@
 
 
 import math #importing this to aid with couple of calc fns
-from functools import reduce
+from functools import reduce #import reduce fn
 
+#function to add a list of numbers together
 def addList(*a):
-    #function to add a list of numbers together
-    #convert args to list
-    add = list(a)
-    #list comprehension to remove all strings
-    numbers = [elm for elm in add if isinstance(elm, str) == False]
-#    for item in add:
-#        if isinstance(item,str) == True: #accounts for strings, repeat throughout
-#            return "Strings not allowed, please try again"
-    if len(numbers) == 0:
-        return "No numbers in string, please try again"
     
-    if len(numbers) < len(add):
+    #list comprehension to remove all strings
+    numbers = [elm for elm in a if isinstance(elm, str) == False]
+    
+    #if length of list is 0 return error
+    if len(numbers) == 0:
+        return "No numbers in input, please try again"
+    
+    #if we removed strings still return sum and then give message indicating some strings were removed  
+    elif len(numbers) < len(a):
+    #reduce function will take our list of strings and add them all and return one value
         return reduce((lambda x, y: x+y), numbers), "We removed your strings"
     
-    return reduce((lambda x, y: x+y), numbers)
-     
-    
-    
-
-
+    #else return the sum using reduce
+    return reduce((lambda x, y: x+y), numbers) 
+ 
+#function to get the cosines of a list of numbers and return answer in list
 def cosList(*a):
     
-    angles = [math.radians(elm) for elm in a]
-    #function to calc cos of a list of angles
-#    if isinstance(a,str) == True:
-#        return "Strings not allowed, please try again"
-     #convert from deg to rads, assuming user will enter degrees, also hard for user to enter certain well used angles in radians exactly (90 = pi/2, etc)
-    return list(map(lambda x: math.cos(x), angles))#returns cos of converted angle
+    #list comprehension to remove all strings
+    numbers = [elm for elm in a if isinstance(elm, str) == False]
+    angles = [math.radians(elm) for elm in numbers]
+    #if length of list is 0 return error
+    if len(numbers) == 0:
+        return "No numbers in input, please try again"
+            
+    #else return cosine list
+    return list(map(lambda x: math.cos(x), angles))
 
 def cubeList(*a):
-    #fn to cube list of numbers
-    #make a list out of your args
-    cubeList = list(a)
-    #list comprehension to remove strings
-    numbers = [elm for elm in cubeList if isinstance(elm, str) == False]
+#fn to cube list of numbers and return answers in a list
     
+    #list comprehension to remove all strings
+    numbers = [elm for elm in a if isinstance(elm, str) == False]
+    
+    #if length of list is 0 return error
     if len(numbers) == 0:
-        return "No numbers in string, please try again"
+        return "No numbers in input, please try again"
+    
     #return message to let them know data was cleansed
-    elif len(numbers) < len(cubeList):
+    elif len(numbers) < len(a):
         return [x**3 for x in numbers], "We removed your strings"
     
     #returns if no strings in list
     return [x**3 for x in numbers]
 
 def cuberootList(*a):
-    #fn to get cuberoots of a list of numbers
-#    if isinstance(a,str) == True:
-#        return "Strings not allowed, please try again"
-    c_roots = list(a)
-    #split into two lists using filter.
+    #fn to get cuberoots of a list of numbers and return in a list
+    
+    #list comprehension to remove all strings
+    numbers = [elm for elm in a if isinstance(elm, str) == False]
+    
+    #use filter to split into neg and non-neg numbers
     #we need to do this as fn for calculating cube roots is different for x>=0 and x<0 or we end up with incorrect complex values for some real valued roots
-    non_neg = list(filter(lambda x: x >= 0, c_roots))
-    neg = list(filter(lambda x: x<0, c_roots))
-    #return two lists, one with cuberoots of non neg numbers, and one for neg numbers
-    return list(map(lambda x: x**(1/3), non_neg)), list(map(lambda x: -(-x)**(1/3), neg)) #for a>0 simple case
+    non_neg = list(filter(lambda x: x >= 0, numbers))
+    neg = list(filter(lambda x: x<0, numbers))
+    
+    #if length of list is 0 return error
+    if len(numbers) == 0:
+        return "No numbers in input, please try again"
+    
+    #if we removed strings still return sum and then give message indicating some strings were removed  
+    elif len(numbers) < len(a):
+    
+        #return two lists, one with cuberoots of non neg numbers, and one for neg numbers, and message to say strings filtered out
+        return list(map(lambda x: x**(1/3), non_neg)), list(map(lambda x: -(-x)**(1/3), neg)), "We removed your strings" #for a>0 simple case
    
+    #case for no strings removed
+    return list(map(lambda x: x**(1/3), non_neg)), list(map(lambda x: -(-x)**(1/3), neg))
     
 def divideLists(a, b):
-    #doesn't make sense to sense to set up a rolling division here.
+    #doesn't make sense to sense to set up a rolling division here like addList fn
     #define function to be pairwise division of two lists of equal length
-    if len(a) != len(b):
-        return "Inputs not of same length, please try again"
-#    if isinstance(a,str) == True or isinstance(b, str) == True:
-#        return "Strings not allowed, please try again"
-#    elif b == 0: #accounting for divide by zero
-#        return "Divide by Zero not allowed"
+    if type(a) != list or type(b) != list:
+        return "Please enter two lists of numbers"
+    
+    elif len(a) != len(b):
+        "Please enter two lists of numbers of equal length"
+    
+    #list comprehension to remove all strings
+    num_a = [elm for elm in a if isinstance(elm, str) == False]
+    num_b = [elm for elm in b if isinstance(elm, str) == False or elm !=0]
+    
+    if len(num_a) != len(num_b):
+        return "Strings or 0 in second list, please try again"
+#   
     return [x/y for (x, y) in zip(a, b)]
 
 def exponentLists(a, b): 
