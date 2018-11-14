@@ -34,6 +34,7 @@ def cosList(*a):
     
     #list comprehension to remove all strings
     numbers = [elm for elm in a if isinstance(elm, str) == False]
+    #convert to radians, take input in degrees as difficult to enter meaningful angles exactly i.e. pi/2, etc
     angles = [math.radians(elm) for elm in numbers]
     #if length of list is 0 return error
     if len(numbers) == 0:
@@ -86,106 +87,204 @@ def cuberootList(*a):
 def divideLists(a, b):
     #doesn't make sense to sense to set up a rolling division here like addList fn
     #define function to be pairwise division of two lists of equal length
+    
+    #if args aren't lists give error message
     if type(a) != list or type(b) != list:
         return "Please enter two lists of numbers"
     
+    #two lists of unequal length can't be pairwise subtracted
     elif len(a) != len(b):
-        "Please enter two lists of numbers of equal length"
+        return "Please enter two lists of numbers of equal length"
+     
+    #if two empty lists are entered return error
+    elif len(a) == 0 and len(b) == 0:
+        return "Lists are empty, try again"
     
-    #list comprehension to remove all strings
+    #list comprehension to remove all strings and 0s from second list to avoid div/0
     num_a = [elm for elm in a if isinstance(elm, str) == False]
-    num_b = [elm for elm in b if isinstance(elm, str) == False or elm !=0]
+    num_b = [elm for elm in b if isinstance(elm, str) == False if elm != 0]
+   
     
+    #check if strings have been removed or a 0 is in second list, don't want to compute in this case
     if len(num_a) != len(num_b):
         return "Strings or 0 in second list, please try again"
-#   
-    return [x/y for (x, y) in zip(a, b)]
+    
+    #return pairwise division using zip function and list comprehension 
+    return [x/y for (x, y) in zip(num_a, num_b)]
 
 def exponentLists(a, b): 
+#function to take in two lists and do pairwise exponentation on them. i.e exponentLists([x_1, x_2],[y_1,y_2]) = [x_1^y_1, x_2^y_2]
     
+    
+    #if args aren't lists give error message
     if type(a) != list or type(b) != list:
         return "Please enter two lists of numbers"
     
+    #two lists of unequal length can't be pairwise subtracted
     elif len(a) != len(b):
-        "Please enter two lists of numbers of equal length"
-        
-    return [x ** y for (x, y) in zip(a, b)]
-    #fn to raise one number to power of another
-    #this fn only works well for a>=0 as a ** b will not accurately roots that return real answers, i.e. cubed root
-#    if isinstance(a,str) == True or isinstance(b, str) == True:
-#        return "Strings not allowed, please try again"
-#    elif a==0 and b==0:
-#        return "undefined term"
-#    elif a < 0:
-#        return "this calculator cannot give an accurate answer in case a<0"
-#    return a ** b
-    
-def factorialList(*a):
-    #fn to take the factorials of a list of non-neg integers
-    
-    return list(map((lambda n: math.factorial(n)), a))
+        return "Please enter two lists of numbers of equal length"
      
-def multiplyList(*args):
-    mult = list(args)
-    #fn to multiply two numbers
-#    if isinstance(a,str) == True or isinstance(b, str) == True:
-#        return "Strings not allowed, please try again"
-    return reduce((lambda x,y: x*y), mult)
-
-def reciprocalList(*args):
-    recip = list(args)
-    #fn to compute reciprocal of any number 
-#    if isinstance(a,str) == True:
-#        return "Strings not allowed, please try again"
-#    if a == 0:
-#        return "Division by zero not allowed."
-    return list(map((lambda x: 1/x), recip))
-def sineList(*a):
-       
-    angles = [math.radians(elm) for elm in a]
-    #function to calc cos of a list of angles
-#    if isinstance(a,str) == True:
-#        return "Strings not allowed, please try again"
-     #convert from deg to rads, assuming user will enter degrees, also hard for user to enter certain well used angles in radians exactly (90 = pi/2, etc)
-    return list(map(lambda x: math.sin(x), angles))#returns cos of converted angle
-def squareList(*a):
-    squares = list(a)
-    #fn to square a number
-#    if isinstance(a,str) == True:
-#        return "Strings not allowed, please try again"
-    return list(map((lambda x: x**2), squares))
-
-def squareGenerator(*a):
-    squares = list(a)
-    for value in squares:
-        yield value**2
+    #if two empty lists are entered return error
+    elif len(a) == 0 and len(b) == 0:
+        return "Lists are empty, try again"
+    
+        #list comprehension to remove all strings and neg numbers from first list to avoid calculating a^b where a is 0 (cannot be done accurately using this calc, see my assignment 1 for rational)
+    num_a = [elm for elm in a if isinstance(elm, str) == False if elm >=0]
+    num_b = [elm for elm in b if isinstance(elm, str) == False]
+   
+    
+    #check if strings have been removed or neg number in first list, don't want to compute in this case
+    if len(num_a) != len(num_b):
+        return "Strings or a<0, please try again"
         
+    return [x ** y for (x, y) in zip(num_a,num_b)]
+        
+def factorialList(*a):
+    #fn to take the factorials of a list of non-neg integers and return in a list
+    
+    #list comprehension to remove everything bar integers >=0
+    numbers = [elm for elm in a if isinstance(elm, int) == True if elm>=0]
+    
+    #if length of list is 0 return error
+    if len(numbers) == 0:
+        return "No valid numbers in input, please try again"
+    #if we removed strings, floats or neg ints still return sum and then give message indicating some strings were removed  
+    elif len(numbers) < len(a):
+        #map function gives us list of factorials, plus message to say list was parsed
+        return list(map((lambda n: math.factorial(n)), numbers)), "We removed all but non-negative ints from your inputs"
+    
+    return list(map((lambda n: math.factorial(n)), numbers))
+     
+def multiplyList(*a): #fn to multiply a list of numbers and return the product
+    
+    #list comprehension to remove all strings
+    numbers = [elm for elm in a if isinstance(elm, str) == False]
+    
+    #if length of list is 0 return error
+    if len(numbers) == 0:
+        return "No numbers in input, please try again"
+    
+    #if we removed strings still return product and then give message indicating some strings were removed  
+    elif len(numbers) < len(a):
+        #return product using reduce on the filtered list
+        return reduce((lambda x,y: x*y), numbers), "We removed your strings"
+    
+    return reduce((lambda x,y: x*y), numbers)
+
+
+def reciprocalList(*a): #fn to compute reciprocal of list of numbers and return answers in a list
+        
+    #list comprehension to remove all strings and any 0s to avoid div/0
+    numbers = [elm for elm in a if isinstance(elm, str) == False if elm !=0]
+    
+    #if length of list is 0 return error
+    if len(numbers) == 0:
+        return "No valid numbers in input, please try again"
+    
+    #return message to let them know data was cleansed of strings and 0
+    elif len(numbers) < len(a):
+        #return list using map function of reciprocals, minus str/0
+        return list(map((lambda x: 1/x), numbers)), "We removed your strings or any 0s"
+    
+    
+    return list(map((lambda x: 1/x), numbers))
+        
+def sineList(*a): #convert list of angles into list of sine of angles
+    
+    #list comprehension to remove all strings   
+    numbers = [elm for elm in a if isinstance(elm, str) == False]
+    #convert to radians, take input in degrees as difficult to enter meaningful angles exactly i.e. pi/2, etc
+    angles = [math.radians(elm) for elm in numbers]
+    
+    #if length of list is 0 return error
+    if len(numbers) == 0:
+        return "No numbers in input, please try again"
+    
+    return list(map(lambda x: math.sin(x), angles))#returns sin of converted angle using map function
+
+def squareList(*a): #function that squares every number in a list and returns that in a list
+    
+    #list comprehension to remove all strings
+    numbers = [elm for elm in a if isinstance(elm, str) == False]
+    
+    #if length of list is 0 return error
+    if len(numbers) == 0:
+        return "No numbers in input, please try again"
+    
+    #return message to let them know data was cleansed
+    elif len(numbers) < len(a):
+        #list comprehension to compute list of squares
+        return [x**2 for x in numbers], "We removed your strings"
+       
+    return [x**2 for x in numbers]
+
+def squareGenerator(*a): #function to generate a repeated square from list of inputs
+    
+    #list comprehension to remove all strings
+    numbers = [elm for elm in a if isinstance(elm, str) == False]
+    
+#set up generator with yield. now once you instatiate, you can run the generator again and again using next function      
+    for value in numbers:
+        yield value**2       
     
 
 def squarerootList(*a):
-    #fn to take suare root of a number. Restricted to non-neg numbers as will not be accurate for a<0 (i.e sqrt(-1) will not equal 0 exactly)
-#    if isinstance(a,str) == True:
-#        return "Strings not allowed, please try again"
-#    if a<0:
-#        return "We are limiting ourselves to real number answers, enter a non-negative number"
-    roots = list(a)
-    non_neg = list(filter(lambda x: x >= 0, roots))
-#    if len(less_than_zero) < len(roots):
-#        print("We filtered negative numbers out of your list")
-    return list(map(lambda x: x**(0.5), non_neg))
+    #fn to take suare roots of a list of number. Restricted to non-neg numbers as will not be accurate for a<0 (i.e sqrt(-1) will not equal i exactly
+#   
+#list comprehension to remove all strings and neg numbers
+    numbers = [elm for elm in a if isinstance(elm, str) == False if elm>=0]
+    
+    #if length of list is 0 return error
+    if len(numbers) == 0:
+        return "No valid numbers in input, please try again"
+    
+    #return message to let them know data was cleansed
+    elif len(numbers) < len(a): 
+        return list(map(lambda x: x**(0.5), numbers)), "Removed strings or numbers less than 0"
+    
+    return list(map(lambda x: x**(0.5), numbers))
 
 def subtractLists(a, b):
     #doesn't make sense to sense to set up a rolling subtraction here.
     #define function to be pairwise subtraction of two lists of equal length
-#    if isinstance(a,str) == True or isinstance(b, str) == True:
-#        return "Strings not allowed, please try again"
-    #use list comprehehsion and zip function to create 3rd list that is the pairwise subtraction
-    return [x - y for (x, y) in zip(a, b)]
 
-def tangentList(*a): 
-    #fn to calculate tan of list of angles
-    #this function will only produce an approx of tan, it can't deal with the zeros
-    angles = [math.radians(elm) for elm in a]
+    #if args aren't lists give error message
+    if type(a) != list or type(b) != list:
+        return "Please enter two lists of numbers"
+    
+    #two lists of unequal length can't be pairwise subtracted
+    elif len(a) != len(b):
+        return "Please enter two lists of numbers of equal length"
+     
+    #if two empty lists are entered return error
+    elif len(a) == 0 and len(b) == 0:
+        return "Lists are empty, try again"
+    
+    #list comprehension to remove all strings
+    num_a = [elm for elm in a if isinstance(elm, str) == False]
+    num_b = [elm for elm in b if isinstance(elm, str) == False]
+   
+    
+    #check if strings have been removed or a 0 is in second list, don't want to compute in this case
+    if len(num_a) != len(num_b):
+        return "Strings found in lists, please try again"
+
+    #use list comprehehsion and zip function to create 3rd list that is the pairwise subtraction
+    return [x - y for (x, y) in zip(num_a, num_b)]
+ 
+def tangentList(*a):  #convert list of angles into list of tan of angles
+    #note that this function doesn't evaluate the zeros of tan properly
+    
+    #list comprehension to remove all strings   
+    numbers = [elm for elm in a if isinstance(elm, str) == False]
+    #convert to radians, take input in degrees as difficult to enter meaningful angles exactly i.e. pi/2, etc
+    angles = [math.radians(elm) for elm in numbers]
+    
+    #if length of list is 0 return error
+    if len(numbers) == 0:
+        return "No numbers in input, please try again"
+    
+    #return tan of angles in a list using map function
     return list(map(lambda x: math.tan(x), angles))
 
 
