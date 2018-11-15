@@ -130,15 +130,15 @@ class CalcmapreduceTest(unittest.TestCase): #inherits from unittest
         
         #set up the generator with some inputs
         
-        square = squareGenerator(1,2,3)
+        self.square = squareGenerator(1,2,3)
         #test that each iteration works
-        self.assertEqual(1, next(square))
-        self.assertEqual(4, next(square))
-        self.assertEqual(9, next(square))
+        self.assertEqual(1, next(self.square))
+        self.assertEqual(4, next(self.square))
+        self.assertEqual(9, next(self.square))
            
-        square = squareGenerator(1,'a',3)
-        self.assertEqual(1, next(square))#test list with string
-        self.assertEqual(9, next(square))
+        self.square = squareGenerator(1,'a',3)
+        self.assertEqual(1, next(self.square))#test list with string
+        self.assertEqual(9, next(self.square))
                 
         
     def testSquarerootList(self): #fn to test squarerootList fn
