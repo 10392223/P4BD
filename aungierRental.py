@@ -71,11 +71,11 @@ class DieselCar(Car):
         self.__engineSize = ''
     
     #getter for engine size
-    def getEngineSize(self):
+    def getDiesEngineSize(self):
         return self.__engineSize
     
     #setter for engine size
-    def setEngineSize(self, engineSize):
+    def setDiesEngineSize(self, engineSize):
         self.__engineSize = engineSize
 
 #Class for attributes specific to electric car      
@@ -87,11 +87,11 @@ class ElectricCar(Car):
         self.__numberFuelCells = 0
     
     #getter for number fuel cells.    
-    def getNumberFuelCells(self):
+    def getElecNumberFuelCells(self):
         return self.__numberFuelCells
     
     #setter for number fuel cells.
-    def setNumberFuelCells(self, numberFuelCells):
+    def setElecNumberFuelCells(self, numberFuelCells):
         self.__numberFuelCells = numberFuelCells
  
 #Class for attributes specific to hybrid car             
@@ -103,11 +103,11 @@ class HybridCar(Car):
         self.__numberFuelCells = 0
         
     #getter for number fuel cells.
-    def getNumberFuelCells(self):
+    def getHybNumberFuelCells(self):
         return self.__numberFuelCells
     
     #setter for number fuel cells.
-    def setNumberFuelCells(self, numberFuelCells):
+    def setHybNumberFuelCells(self, numberFuelCells):
         self.__numberFuelCells = numberFuelCells
 
 #Class for attributes specific to petrol car             
@@ -119,12 +119,14 @@ class PetrolCar(Car):
         self.__engineSize = ''
     
     #getter for engine size    
-    def getEngineSize(self):
+    def getPetrolEngineSize(self):
         return self.__engineSize
     
     #setter for engine size
-    def setEngineSize(self, engineSize):
+    def setPetrolEngineSize(self, engineSize):
         self.__engineSize = engineSize
+
+
 
 #class for the aungier rental business module
 class AungierRental(object):
@@ -154,7 +156,7 @@ class AungierRental(object):
             reg_it.setModel(row['Model'])
             reg_it.setReg(row['Reg'])
             #this variable specific to diesel car class
-            reg_it.setEngineSize(row['EngSize'])
+            reg_it.setDiesEngineSize(row['EngSize'])
             #append the instance to the list of diesel cars
             self.__diesel_cars.append(reg_it)
            
@@ -170,7 +172,7 @@ class AungierRental(object):
             reg_it.setModel(row['Model'])
             reg_it.setReg(row['Reg'])
             
-            reg_it.setNumberFuelCells(row['FuelCells'])
+            reg_it.setElecNumberFuelCells(row['FuelCells'])
             
             self.__electric_cars.append(reg_it)
             
@@ -186,7 +188,7 @@ class AungierRental(object):
             reg_it.setModel(row['Model'])
             reg_it.setReg(row['Reg'])
             
-            reg_it.setNumberFuelCells(row['FuelCells'])
+            reg_it.setHybNumberFuelCells(row['FuelCells'])
             
             self.__hybrid_cars.append(reg_it)  
           
@@ -202,7 +204,7 @@ class AungierRental(object):
             reg_it.setModel(row['Model'])
             reg_it.setReg(row['Reg'])
             
-            reg_it.setEngineSize(row['EngSize'])
+            reg_it.setPetrolEngineSize(row['EngSize'])
             
             self.__petrol_cars.append(reg_it)
            
@@ -239,7 +241,7 @@ class AungierRental(object):
             print("All cars are rented out, take the bus!")
        
         else:
-            #takes in the type the customer wants to rent
+            #checks type
             if type == 'D':
                 #checks to see if any of the type left.
                 if len(self.__diesel_cars) >0:
@@ -270,131 +272,184 @@ class AungierRental(object):
                 else:
                     print('\n' + 'No Petrol cars remaining')
     
+    #function to return a car
     def returnCar(self, type):
     
+        #check to make sure they're not returning a car when all cars are back already, doesn't allow a return and prints error
         if len(self.getDieselCars()) == 8 and len(self.getElectricCars()) == 4 and len(self.getHybridCars()) == 8 and len(self.getPetrolCars())== 20:
             print("All cars are returned, did you rob this one instead?")
-            
-        import pandas as pd
-        cars = pd.read_csv("aungier_cars.csv")
-         
-        reg_it = input("Please enter the registration of the car: ").upper()
         
-        if type == 'D':
-            if len(self.__diesel_cars) <8:
-              
-              for index, row in cars.iterrows():
-                if row['Reg'] == reg_it:
-              
-                              
-                    reg_it = DieselCar()
+        #else we can return car
+        else:
+            #import pandas and read in the csv
+            import pandas as pd
+            cars = pd.read_csv("aungier_cars.csv")
+             
+            #ask them to enter the reg of the car they rented
+            reg_it = input("Please enter the registration of the car: ").upper()
             
-                    reg_it.setColour(row['Colour'])
-                    reg_it.setMake(row['Make'])
-                    reg_it.setModel(row['Model'])
-                    reg_it.setReg(row['Reg'])
-                    self.__diesel_cars.append(reg_it)
+            #takes type from menu they entered and directs them using if statement
+            if type == 'D':
+                #ensures they're not returning wrong car by checking number of cars in stock
+                if len(self.__diesel_cars) <8:
+                  #itterate through csv to locate the car in question
+                  for index, row in cars.iterrows():
+                      #if there's a match
+                    if row['Reg'] == reg_it:
+                  
+                        #instantiate and append just like above, ensures same car returned.          
+                        reg_it = DieselCar()
                 
-            else:
-                print('\n' + 'All Diesel cars returned, try again')
-                
-        elif type == 'E':
-            if len(self.__electric_cars) <4:
-              
-              for index, row in cars.iterrows():
-                if row['Reg'] == reg_it:
-              
-                              
-                    reg_it = ElectricCar()
+                        reg_it.setColour(row['Colour'])
+                        reg_it.setMake(row['Make'])
+                        reg_it.setModel(row['Model'])
+                        reg_it.setReg(row['Reg'])
+                        
+                        reg_it.setDiesEngineSize(row['EngSize'])
+                        
+                        self.__diesel_cars.append(reg_it)
+                    
+                else:
+                    print('\n' + 'All Diesel cars returned, try again')
             
-                    reg_it.setColour(row['Colour'])
-                    reg_it.setMake(row['Make'])
-                    reg_it.setModel(row['Model'])
-                    reg_it.setReg(row['Reg'])
-                    self.__electric_cars.append(reg_it)
-            else:
-                print('\n' + 'All Electric cars returned, try again')
+            #repeat as above but for electric cars
+            elif type == 'E':
+                if len(self.__electric_cars) <4:
+                  
+                  for index, row in cars.iterrows():
+                    if row['Reg'] == reg_it:
+                  
+                                  
+                        reg_it = ElectricCar()
                 
-        elif type == 'H':
-            if len(self.__hybrid_cars) <8:
-              for index, row in cars.iterrows():
-                if row['Reg'] == reg_it:
-              
-                              
-                    reg_it = HybridCar()
+                        reg_it.setColour(row['Colour'])
+                        reg_it.setMake(row['Make'])
+                        reg_it.setModel(row['Model'])
+                        reg_it.setReg(row['Reg'])
+                        
+                        reg_it.setElecNumberFuelCells(row['FuelCells'])
+                        self.__electric_cars.append(reg_it)
+                else:
+                    print('\n' + 'All Electric cars returned, try again')
             
-                    reg_it.setColour(row['Colour'])
-                    reg_it.setMake(row['Make'])
-                    reg_it.setModel(row['Model'])
-                    reg_it.setReg(row['Reg'])
-                    self.__hybrid_cars.append(reg_it)
-            else:
-                print('\n' + 'All Hybrid cars returned, try again')
+            #repeat as above but for hybrid cars
+            elif type == 'H':
+                if len(self.__hybrid_cars) <8:
+                  for index, row in cars.iterrows():
+                    if row['Reg'] == reg_it:
+                  
+                                  
+                        reg_it = HybridCar()
                 
-        elif type == 'P':
-            if len(self.__hybrid_cars) <20:
-              for index, row in cars.iterrows():
-                if row['Reg'] == reg_it:
-              
-                              
-                    reg_it = PetrolCar()
+                        reg_it.setColour(row['Colour'])
+                        reg_it.setMake(row['Make'])
+                        reg_it.setModel(row['Model'])
+                        reg_it.setReg(row['Reg'])
+                        
+                        reg_it.setHybNumberFuelCells(row['FuelCells'])
+                        self.__hybrid_cars.append(reg_it)
+                else:
+                    print('\n' + 'All Hybrid cars returned, try again')
+             
+            #repeat as above but for petrol cars
+            elif type == 'P':
+                if len(self.__hybrid_cars) <20:
+                  for index, row in cars.iterrows():
+                    if row['Reg'] == reg_it:
+                  
+                                  
+                        reg_it = PetrolCar()
+                
+                        reg_it.setColour(row['Colour'])
+                        reg_it.setMake(row['Make'])
+                        reg_it.setModel(row['Model'])
+                        reg_it.setReg(row['Reg'])
+                        
+                        reg_it.setPetrolEngineSize(row['EngSize'])
             
-                    reg_it.setColour(row['Colour'])
-                    reg_it.setMake(row['Make'])
-                    reg_it.setModel(row['Model'])
-                    reg_it.setReg(row['Reg'])
-                    self.__petrol_cars.append(reg_it)
-            else:
-                print('\n' + 'All Hybrid cars returned, try again')
-                
+                        self.__petrol_cars.append(reg_it)
+                else:
+                    print('\n' + 'All Hybrid cars returned, try again')
+    
+    #function for customer menu        
     def mainMenu(self):
         
+        #set up while loop for main menu, user can only escape with a quit
         while 1==1:
             
+            #print statement with welcome screen
             print("**********************")
             print('Welcome to Aungier Rental')
             print("**********************")
             print('\n' + "What would you like to do?", '\n')
             print("1. Rent a Car." + '\n' + '2. Return a Car.' + '\n' + '3. Quit')
             
+            #variable to take in the user input
             answer = input()
             
+            #if answer = 3, quit program
             if answer == '3':
                 print('\n' + 'Goodbye')
+                #break exits loop and program
                 break
+            
+            #if user enters any incorrect input, str, etc prints error and loop is re-entered at menu stage
             elif answer !='1' and answer !='2':
                 print('Invalid input, try again')
             
+            #else proceed
             else:
+                #another loop for inner (rent/return) menu options
                 while 1==1:
+                    #if they choose to rent
                     if answer == '1':
+                        #print options
                         print('What car would you like to rent?')
                         type = input('D for Diesel, E for electric, H for Hybrid, P for petrol, M for Main Menu: ')
+                        #take input and convert to upper case
                         type= type.upper()
+                        #if user chooses main menu, break loop and bring them up one level to main menu
                         if type == 'M':
                             break
+                        #if they don't choose valid input print error and loop back to inner menu
                         elif type!= 'D' and type!='E' and type!= 'H' and type!= 'P':
                             print("Please try again.")
+                        
+                        #else take type of car they went to rent and feed into rent car function
                         else:
                             self.rent(type)
+                            #print cars in stock so user can see what's left in stock after renting
                             self.checkCarsInStock()
+                            #break to return to main menu
                             break
+                    #brings them to return menu    
                     elif answer == '2':
+                        #prints options
                         print('What car would you like to return?')
                         type = input('D for Diesel, E for electric, H for Hybrid, P for petrol, M for Main Menu: ')
+                        #converts input to upper case
                         type = type.upper()
+                        
+                        #break to main menu
                         if type == 'M':
                             break
+                        #deals with erroneous input
                         elif type!= 'D' and type!='E' and type!= 'H' and type!= 'P':
                             print("Please try again.")
+                        #else accesses return car function
                         else:
-                            self.returnCar(type.upper())
+                            #feeds in type of car to returnCar
+                            self.returnCar(type)
+                            #prints stock
                             self.checkCarsInStock()
+                            #breaks and returns to main menu
                             break
-       
+
+#instantiate's class for rental      
 Martin = AungierRental()
 
-
+#this keeps the menu inputs out of the testing file when it runs, i.e. aungierTest.py is not the home of this code.
 if __name__ == '__main__':
     Martin.mainMenu()
+    
     
